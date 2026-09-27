@@ -1,0 +1,94 @@
+# configs/56m.yaml
+#
+# Target architecture for the research question. Matches the spec exactly:
+#   d_model=640, n_layers=10, n_query_heads=10, n_kv_heads=5, head_dim=64,
+#   d_ffn=1728, vocab_size=16384, context_length=512
+#
+# Analytic parameter count (see model/config.py::analytic_param_count):
+#   ~55.96M params
+#
+# NOTE on micro_batch_size: the value below (6) is a conservative STARTING
+# POINT for a 6GB card, not a benchmarked result -- actual achievable batch
+# size depends on the real memory profile of attention/FFN activations,
+# which we can only measure once model/llm.py exists (Phase 3) and we run
+# training/trainer.py's OOM auto-backoff (Phase 4) on real hardware. Treat
+# this number as provisional until Phase 7 records an actual measured
+# tokens/sec + peak VRAM usage in logs/.
+
+model:
+  name: "56m"
+  vocab_size: 16384
+  d_model: 640
+  n_layers: 10
+  n_query_heads: 10
+  n_kv_heads: 5
+  head_dim: 64
+  d_ffn: 1728
+  context_length: 512
+  norm_eps: 1.0e-5
+  rope_theta: 10000.0
+  dropout: 0.0
+  attn_dropout: 0.0
+  tie_embeddings: true
+  dtype: "bf16"
+
+training:
+  optimizer: "adamw"
+  learning_rate: 3.0e-4
+  min_learning_rate: 3.0e-5
+  weight_decay: 0.1
+  beta1: 0.9
+  beta2: 0.95
+  grad_clip: 1.0
+  warmup_steps: 500
+  max_steps: 20000
+  lr_scheduler: "cosine"
+  micro_batch_size: 6
+  gradient_accumulation_steps: 8
+  sequence_length: 512
+  checkpoint_every: 500
+  eval_every: 250
+  log_every: 10
+  keep_last_n_checkpoints: 3
+  dataset_path: "data/train"
+  val_dataset_path: "data/val"
+  max_data_size_mb: 2000
+  max_tokens: 300000000
+  seed: 1337
+
+instruction:
+  dataset_path: "data/instruction"
+  learning_rate: 1.0e-4
+  micro_batch_size: 4
+  gradient_accumulation_steps: 8
+  max_steps: 2000
+  mask_prompt_loss: true
+  user_token: "<USER>"
+  assistant_token: "<ASSISTANT>"
+
+self_learning:
+  buffer_size: 500
+  replay_old_data_fraction: 0.3
+  regression_threshold: 0.98
+  finetune_steps: 300
+  finetune_learning_rate: 5.0e-5
+  experiences_path: "data/experiences"
+  regression_benchmark_path: "evaluation/regression_benchmark.jsonl"
+  min_verified_before_training: 500
+
+memory:
+  use_faiss: true
+  embedding_dim: 640
+  short_term_max_turns: 20
+  long_term_index_path: "self_learning/long_term_index"
+  short_term_index_path: "self_learning/short_term_index"
+
+runtime:
+  device: "auto"
+  vram_budget_gb: 6.0
+  ram_budget_gb: 16.0
+  auto_reduce_batch_on_oom: true
+  min_micro_batch_size: 1
+  num_workers: 2
+  pin_memory: true
+  compile_model: false

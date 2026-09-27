@@ -1,0 +1,25 @@
+{
+  "tokenizer_type": "byte_level_bpe",
+  "requested_vocab_size": 16384,
+  "actual_vocab_size": 726,
+  "context_length": 512,
+  "special_tokens": [
+    "<PAD>",
+    "<BOS>",
+    "<EOS>",
+    "<UNK>",
+    "<USER>",
+    "<ASSISTANT>"
+  ],
+  "special_token_ids": {
+    "<PAD>": 0,
+    "<BOS>": 1,
+    "<EOS>": 2,
+    "<UNK>": 3,
+    "<USER>": 4,
+    "<ASSISTANT>": 5
+  },
+  "min_frequency": 2,
+  "training_input": "data/raw/dev_sample_corpus.txt",
+  "training_seconds": 0.009
+}

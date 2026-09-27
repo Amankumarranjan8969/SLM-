@@ -1,0 +1,165 @@
+# dev_sample_corpus.txt
+#
+# This is a small, ORIGINAL, hand-written corpus used only to validate the
+# tokenizer training pipeline end-to-end (train -> encode -> decode) in a
+# sandboxed dev environment with no internet access to dataset hosts.
+#
+# It is NOT TinyStories, WikiText, or FineWeb. Those are downloaded and
+# processed in the data pipeline phase, on a machine with network access,
+# via data/raw -> data/cleaned -> data/train / data/val. Do not use this
+# file as an actual pretraining corpus -- it exists purely so
+# train_tokenizer.py and tokenizer.py have something real to run against
+# right now, and so tests/test_tokenizer.py can assert genuine round-trip
+# correctness instead of mocking the tokenizer.
+#
+# Content below intentionally mixes plain English prose, Python code, and
+# simple mathematics, since the final vocabulary needs byte coverage for
+# all three domains (see project section 4: Python/Java/C/C++/DS&A/Math/
+# ML/AI/CS fundamentals).
+
+Once there was a small robot who lived at the edge of a quiet forest.
+Every morning it counted the leaves that had fallen during the night,
+and every evening it sorted them by size into three wooden boxes.
+The robot was not very fast, and it was not very strong, but it was
+patient, and patience turned out to be the only thing the forest
+ever really asked of anyone.
+
+One day a fox asked the robot why it bothered counting leaves at all.
+"Because," said the robot, "if I do not count them, no one will know
+how the forest changes from one day to the next." The fox thought
+about this for a long time, and then it started counting the leaves
+too, just to see what the robot saw.
+
+def factorial(n: int) -> int:
+    """Return n! computed iteratively, avoiding recursion depth limits."""
+    if n < 0:
+        raise ValueError("factorial is undefined for negative integers")
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+
+
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    if n % 2 == 0:
+        return n == 2
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 2
+    return True
+
+
+class BinarySearchTree:
+    """A minimal, unbalanced binary search tree for teaching purposes."""
+
+    def __init__(self):
+        self.root = None
+
+    def insert(self, value):
+        if self.root is None:
+            self.root = _Node(value)
+            return
+        node = self.root
+        while True:
+            if value < node.value:
+                if node.left is None:
+                    node.left = _Node(value)
+                    return
+                node = node.left
+            else:
+                if node.right is None:
+                    node.right = _Node(value)
+                    return
+                node = node.right
+
+
+class _Node:
+    __slots__ = ("value", "left", "right")
+
+    def __init__(self, value):
+        self.value = value
+        self.left = None
+        self.right = None
+
+
+// A small C-style function for computing the greatest common divisor.
+int gcd(int a, int b) {
+    while (b != 0) {
+        int t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+public class QuickSort {
+    public static void sort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pivotIndex = partition(arr, low, high);
+            sort(arr, low, pivotIndex - 1);
+            sort(arr, pivotIndex + 1, high);
+        }
+    }
+
+    private static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        return i + 1;
+    }
+}
+
+Basic arithmetic and algebra:
+2 + 2 = 4
+17 * 3 = 51
+The quadratic formula solves ax^2 + bx + c = 0 for x, giving
+x = (-b +/- sqrt(b^2 - 4ac)) / (2a).
+The derivative of x^2 with respect to x is 2x.
+The integral of 2x with respect to x is x^2 + C.
+A matrix multiplied by its inverse yields the identity matrix.
+
+Machine learning notes:
+A neural network layer applies a linear transformation followed by a
+nonlinear activation function such as ReLU, GELU, or SiLU. Gradient
+descent updates each parameter in the direction that most reduces the
+loss function, scaled by a learning rate. Overfitting occurs when a
+model memorizes its training data instead of learning patterns that
+generalize to unseen examples; regularization, dropout, and early
+stopping are common ways to reduce it. Attention mechanisms let a
+model weigh the relevance of every token in a sequence when producing
+a representation for any single token, which is why transformers can
+model long-range dependencies more directly than recurrent networks.
+
+Data structures and algorithms glossary:
+- Stack: last-in, first-out access; push and pop are O(1).
+- Queue: first-in, first-out access; enqueue and dequeue are O(1)
+  with a proper circular buffer or linked list implementation.
+- Hash table: average O(1) lookup, insertion, and deletion, backed by
+  an array of buckets and a hash function that distributes keys
+  uniformly.
+- Binary search: O(log n) lookup in a sorted array by repeatedly
+  halving the search interval.
+- Depth-first search and breadth-first search both visit every
+  reachable node in a graph, but in different orders and using
+  different auxiliary data structures (a stack versus a queue).
+
+Special characters and unicode coverage for byte-level testing:
+café, naïve, façade, Zürich,日本語, Ελληνικά, Кириллица, 🙂, 🚀, 🤖
+Tabs	and	newlines
+and    multiple    spaces.
+Punctuation: don't, can't, it's, "quoted", (parentheses), [brackets],
+{braces}, <angle brackets>, semi;colon: dash-separated_words.

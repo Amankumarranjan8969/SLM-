@@ -1,0 +1,39 @@
+# Core
+torch>=2.3.0            # install with CUDA 12.x wheel per https://pytorch.org/get-started/locally/
+numpy>=1.26
+pyyaml>=6.0
+tqdm>=4.66
+
+# Tokenizer (byte-level BPE, we train our own -- not using a pretrained tokenizer)
+tokenizers>=0.19
+
+# Data acquisition / cleaning (Stage A/B/C datasets only; NOT used for the
+# core model architecture, which is implemented from scratch in model/)
+datasets>=2.19
+huggingface-hub>=0.23
+
+# Verification system
+sympy>=1.12              # math verifier
+
+# RAG memory
+faiss-cpu>=1.8.0          # CPU FAISS is sufficient at this scale; keeps VRAM free for training
+
+# Logging / experiment tracking
+tensorboard>=2.16
+pandas>=2.2
+matplotlib>=3.8
+
+# Web / API (Phase 18, optional)
+fastapi>=0.111
+uvicorn[standard]>=0.29
+pydantic>=2.7
+
+# Dashboard (Phase 19, optional)
+streamlit>=1.35
+
+# Testing
+pytest>=8.2
+pytest-timeout>=2.3       # bounds hanging tests (e.g. sandboxed code verifier)
+
+# Dev/quality
+black>=24.4
